@@ -1,0 +1,76 @@
+<html>
+	<head>
+		{% load staticfiles %} {% load ehcofilter %}
+		<title>{% settings_value "TITLE" %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'sspanel/css/main.css' %}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<noscript><link rel="stylesheet" href="{% static 'sspanel/css/noscript.css' %}" /></noscript>
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-diamond"></span>
+						</div>
+							<div>
+                                <br>
+                                <img width="50%" src="{% static 'img/1.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/2.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/3.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/4.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/5.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/6.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/7.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/8.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/9.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/10.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/11.png' %}">
+                                <br>
+                                <img width="50%" src="{% static 'img/12.png' %}">
+							</div>
+						<nav>
+							<ul>
+                                <li><a href="{% url 'shadowsocks:userinfo' %}">返回</a></li>
+{#								<li><a href="{% url 'shadowsocks:donate' %}">在线捐赠</a></li>#}
+{#								<li><a href="{% url 'shadowsocks:chargecenter' %}">充值卡激活</a></li>#}
+{#								<li><a href="{% url 'shadowsocks:shop' %}">商品界面</a></li>#}
+{#								<li><a href="{% url 'shadowsocks:purchaselog' %}">购买记录</a></li>#}
+{#								<li><a href="http://shell.oss-cn-hongkong.aliyuncs.com/SSTap-beta-setup-1.1.0.1.exe.7z">客户端下载</a></li>#}
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="{% static 'sspanel/js/jquery.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/skel.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/util.js' %}"></script>
+			<script src="{% static 'sspanel/js/main.js' %}"></script>
+
+	</body>
+</html>

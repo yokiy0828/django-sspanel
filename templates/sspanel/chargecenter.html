@@ -1,73 +1,104 @@
-{% extends 'base.html' %} {% block main %}
-<div class="column is-12">
-    <section class="hero is-warning is-smaill">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    充值中心：
-                </h1>
-                <h2 class="subtitle">
-                    请在下方输方输入充值码....
-                </h2>
-            </div>
-        </div>
-    </section>
-</div>
+<html>
+	<head>
+		{% load staticfiles %} {% load ehcofilter %}
+		<title>{% settings_value "TITLE" %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'sspanel/css/main.css' %}" />
+        <link rel="stylesheet" href="{% static 'sspanel/css/sweetalert.css' %}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<noscript><link rel="stylesheet" href="{% static 'sspanel/css/noscript.css' %}" /></noscript>
+	</head>
+	<body>
 
-<div class="column is-12">
-    <nav class="level box ">
-        <div class="level-item has-text-centered">
-            <div>
-                <p class="heading">用户名:</p>
-                <p class="title">{{ user }}</p>
-            </div>
-        </div>
-        <div class="level-item has-text-centered">
-            <div>
-                <p class="heading">余额：</p>
-                <p class="title">
-                    <code>{{ user.balance }}元</code>
-                </p>
-            </div>
-        </div>
-    </nav>
-    <div class="box ">
-        <form class="form" action="{% url 'shadowsocks:charge' %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="chargecode" class="input " required="" id="chargecode" placeholder="请输入充值码">
-            <hr/>
-            <div class="is-grouped">
-                <button type="submit" class="button is-danger is-outlined ">充值</button>
-            </div>
-        </form>
-    </div>
-    <div class="box">
-        <div class="content">
-            <p class="subtitle">充值记录：</p>
-            <table class="table is-striped">
-                <thead>
-                    <tr>
-                        <th>时间:</th>
-                        <th>代码:</th>
-                        <th>金额:</th>
-                        <th>使用:</th>
-                    </tr>
-                </thead>
-                {% for code in codelist %}
-                <tr>
-                    <td>{{ code.time|date:"m月d日" }}</td>
-                    <td>{{ code.code }}</td>
-                    <td>{{ code.number }}</td>
-                    <td>{{ code.isused }}</td>
-                </tr>
-                {% empty %}
-                <h2 class="subtitle">
-                    还没有氪金过，大佬快来吧
-                </h2>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-</div>
+		<!-- Wrapper -->
+			<div id="wrapper">
 
-{% endblock main %}
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-diamond"></span>
+						</div>
+                            <div class="column is-12">
+                                <nav class="level box ">
+                                    <div class="level-item has-text-centered">
+                                        <div>
+                                            <div class="heading">用户名: {{ user }}</div>
+                                            <div class="heading">余额：<code>{{ user.balance }}元</code></div>
+                                        </div>
+                                    </div>
+                                </nav>
+                                <div class="box ">
+                                    <form class="form" action="{% url 'shadowsocks:charge' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="text" name="chargecode" class="input " required="" id="chargecode" placeholder="请输入充值码">
+                                        <br>
+                                        <div class="is-grouped">
+                                            <button type="submit" class="button is-danger is-outlined ">充值</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="box">
+                                    <div class="content">
+                                        <p class="subtitle">充值记录：</p>
+                                        <table class="table is-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>时间:</th>
+                                                    <th>代码:</th>
+                                                    <th>金额:</th>
+                                                    <th>使用:</th>
+                                                </tr>
+                                            </thead>
+                                            {% for code in codelist %}
+                                            <tr>
+                                                <td>{{ code.time|date:"m月d日" }}</td>
+                                                <td>{{ code.code }}</td>
+                                                <td>{{ code.number }}</td>
+                                                <td>{{ code.isused }}</td>
+                                            </tr>
+                                            {% empty %}
+                                            <h4 class="subtitle">
+                                                没有查到充值记录！如已充值，请刷新页面！
+                                            </h4>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+						<nav>
+							<ul>
+                        <li><a href="{% url 'shadowsocks:userinfo' %}">返回</a></li>
+{#                        <li><a href="{% url 'shadowsocks:nodeinfo' %}">节点信息</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:chargecenter' %}">刷新</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:shop' %}">商品界面</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:purchaselog' %}">购买记录</a></li>#}
+{#                        <li><a href="http://shell.oss-cn-hongkong.aliyuncs.com/SSTap-beta-setup-1.1.0.1.exe.7z">客户端下载</a></li>#}
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="{% static 'sspanel/js/jquery.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/skel.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/util.js' %}"></script>
+			<script src="{% static 'sspanel/js/main.js' %}"></script>
+            <script src="{% static 'sspanel/js/sweetalert.min.js' %}"></script>
+            <!--整站消息提醒功能 -->
+			{% if registerinfo %}
+			<script>
+			    swal("{{ registerinfo.title }}", '{{ registerinfo.subtitle }}', '{{ registerinfo.status }}');
+			</script> {% endif %}
+
+	</body>
+</html>

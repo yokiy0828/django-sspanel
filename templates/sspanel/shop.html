@@ -1,99 +1,132 @@
-{% extends 'base.html' %} {% block main %}
-
-<div class="column is-12">
-    <section class="hero is-warning is-smaill">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    商品列表：
-                </h1>
-                <h2 class="subtitle">
-                    嘿，土豪，快把我收到碗里去
-                </h2>
-            </div>
-        </div>
-    </section>
-</div>
-<div class="column is-12">
-    <nav class="level box">
-        <div class="level-item has-text-centered">
-            <div>
-                <p class="heading">用户名:</p>
-                <p class="title">{{ ss_user }}</p>
-            </div>
-        </div>
-        <div class="level-item has-text-centered">
-            <div>
-                <p class="heading">余额：</p>
-                <p class="title">{{ ss_user.balance }}</p>
-            </div>
-        </div>
-    </nav>
-    <div class="box" id="id-goodlist">
-        {% for good in goods %}
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    商品序号：{{ good.pk }}
-                </p>
-                <a class="modal-button card-header-icon" data-target="modal-{{ good.pk }}">
-                <span class="icon">
-                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                </span>
-                <span>购买</span>
-                </a>
-            </header>
-            <div class="card-content">
+<html>
+	<head>
+		{% load staticfiles %} {% load ehcofilter %}
+		<title>{% settings_value "TITLE" %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'sspanel/css/main.css' %}" />
+        <link rel="stylesheet" href="{% static 'sspanel/css/sweetalert.css' %}" />
+        <link rel="stylesheet" href="{% static 'sspanel/css/bulma.css' %}" />
+{#        <link rel="stylesheet" href="{% static 'sspanel/css/font-awesome.min.css' %}" />#}
+{#        <link rel="stylesheet" href="{% static 'sspanel/css/ehco.css' %}" />#}
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<noscript><link rel="stylesheet" href="{% static 'sspanel/css/noscript.css' %}" /></noscript>
+	</head>
+	<body>
+		<!-- Wrapper -->
+        <div id="wrapper">
+        <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <span class="icon fa-diamond"></span>
+                </div>
                 <div class="content">
-                    {{ good.name }} <br>
-                    <strong>价格：</strong><code>{{ good.money }}元</code><br>
-                    <strong>流量：</strong><code>{{ good.get_transfer_by_GB }} GB</code><br>
-                    <strong>提升等级至：</strong><code>{{ good.level }} 级</code><br>
-                    <strong>等级有效期：</strong><code>{{ good.days }} 天</code>                                                           
+                    <div class="column is-12">
+                        <nav class="level box">
+{#                                        <div class="level-item has-text-centered">#}
+                                <p class="heading">用户名: {{ ss_user }} 余额： {{ ss_user.balance }}</p>
+{#                                        </div>#}
+                        </nav>
+                        <div class="box" id="id-goodlist">
+                            {% for good in goods %}
+                            <div>
+                                <header class="card-header">
+                                    <p class="card-header-title">
+                                        商品序号：{{ good.pk }}
+                                    </p>
+                                    <a class="modal-button card-header-icon" data-target="modal-{{ good.pk }}">
+                                    <span class="icon">
+                                        <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                    </span>
+                                    <span>购买</span>
+                                    </a>
+                                </header>
+                                <div class="card-content">
+                                    <div class="content">
+                                        {{ good.name }} <br>
+                                        <strong>价格：</strong><code>{{ good.money }}元</code><br>
+                                        <strong>流量：</strong><code>{{ good.get_transfer_by_GB }} GB</code><br>
+                                        <strong>提升等级至：</strong><code>{{ good.level }} 级</code><br>
+                                        <strong>等级有效期：</strong><code>{{ good.days }} 天</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal" id="modal-{{ good.pk }}">
+                                <div class="modal-background"></div>
+                                <div class="modal-card">
+                                    <header class="modal-card-head">
+                                        <p class="modal-card-title"><strong>订单确认:</strong></p>
+                                        <button class="delete"></button>
+                                    </header>
+                                    <section class="modal-card-body" data-id="{{ good.pk }}">
+                                    <p class="subtitle">    {{ good.name }} </p>
+                                    <strong>价格：</strong><code>{{ good.money }}元</code> <br>
+                                    <strong>流量：</strong><code>{{ good.get_transfer_by_GB }} GB</code><br>
+                                    <strong>提升等级至：</strong><code>{{ good.level }} 级</code><br>
+                                    <strong>等级有效期：</strong><code>{{ good.days }} 天</code>
+                                    <br><br>
+                                    <a class="button is-danger is-outlined" id="id-button-pruchase">确认购买</a>
+                                    </section>
+                                </div>
+                            </div>
+                            <br>
+                            {% empty %}
+                            <p class="subtitle">暂时没有商品上架哦</p>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal" id="modal-{{ good.pk }}">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">订单确认:</p>
-                        <button class="delete"></button>
-                    </header>
-                    <section class="modal-card-body" data-id="{{ good.pk }}">
-                    <p class="subtitle">    {{ good.name }} </p>
-                    <strong>价格：</strong><code>{{ good.money }}元</code> <br>
-                    <strong>流量：</strong><code>{{ good.get_transfer_by_GB }} GB</code><br>
-                    <strong>提升等级至：</strong><code>{{ good.level }} 级</code><br>
-                    <strong>等级有效期：</strong><code>{{ good.days }} 天</code>                
-                    <br><br>        
-                    <a class="button is-danger is-outlined" id="id-button-pruchase">确认购买</a>                  
-                    </section>
-                </div>
-            </div>     
-        <br> 
-        {% empty %}
-        <p class="subtitle">暂时没有商品上架哦</p>
-        {% endfor %}
-    </div>
-</div>
-<script>
-    var goodList = $("#id-goodlist")
-    // 事件委托绑定按钮
-    goodList.on('click', '#id-button-pruchase', function (event) {
-        var button = $(event.target)
-        var good = button.closest('.modal-card-body')  
-        // 找到节点id
-        var goodId = good.data('id')
-        data = {
-            csrfmiddlewaretoken: "{{ csrf_token }}",
-            goodId : goodId
-        }
-        url = "{% url 'api:purchase' %}"
-        $.post(url,data,function(results){
-            swal(results.title,results.subtitle,results.status)
-        })
-    })
-</script>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'shadowsocks:userinfo' %}">返回</a></li>
+{#                        <li><a href="{% url 'shadowsocks:nodeinfo' %}">节点信息</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:donate' %}">在线捐赠</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:chargecenter' %}">充值卡激活</a></li>#}
+{#                        <li><a href="{% url 'shadowsocks:purchaselog' %}">购买记录</a></li>#}
+{#                        <li><a href="http://shell.oss-cn-hongkong.aliyuncs.com/SSTap-beta-setup-1.1.0.1.exe.7z">客户端下载</a></li>#}
+                    </ul>
+                </nav>
+            </header>
+            <!-- Footer -->
+            <footer id="footer">
+                <p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+            </footer>
 
-{% endblock main %}
+        </div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="{% static 'sspanel/js/jquery.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/skel.min.js' %}"></script>
+			<script src="{% static 'sspanel/js/util.js' %}"></script>
+			<script src="{% static 'sspanel/js/main.js' %}"></script>
+            <script src="{% static 'sspanel/js/sweetalert.min.js' %}"></script>
+            <script src="{% static 'sspanel/js/ehcov1.js' %}"></script>
+            <script>
+                var goodList = $("#id-goodlist")
+                // 事件委托绑定按钮
+                goodList.on('click', '#id-button-pruchase', function (event) {
+                    var button = $(event.target)
+                    var good = button.closest('.modal-card-body')
+                    // 找到节点id
+                    var goodId = good.data('id')
+                    data = {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        goodId : goodId
+                    }
+                    url = "{% url 'api:purchase' %}"
+                    $.post(url,data,function(results){
+                        swal(results.title,results.subtitle,results.status)
+                    })
+                })
+            </script>
+            <!--整站消息提醒功能 -->
+			{% if registerinfo %}
+			<script>
+			    swal("{{ registerinfo.title }}", '{{ registerinfo.subtitle }}', '{{ registerinfo.status }}');
+			</script> {% endif %}
+
+	</body>
+</html>

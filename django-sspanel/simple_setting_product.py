@@ -1,9 +1,11 @@
 # DEBUG设置
-DEBUG = False
+DEBUG = True
 
 # 域名设置
 ALLOWED_HOSTS = [
-    'your.domain.com'
+    '192.168.0.175',
+    'localhost',
+    '127.0.0.1'
 ]
 
 # mysql 设置
@@ -13,8 +15,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sspanel',
         'USER': 'root',
-        'PASSWORD': 'pass',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'Wuqiaini.123',
+        'HOST': '47.96.154.113',
         'PORT': '3306',
         'OPTIONS': {
             'autocommit': True,
@@ -33,43 +35,42 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
 
 # 我使用163邮箱作为smtp服务器
-EMAIL_HOST = 'smtp.163.com'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = 'USER'
-EMAIL_HOST_PASSWORD = 'PASS'
-DEFAULT_FROM_EMAIL = 'Ehco<ADDRESS>'
+EMAIL_HOST = 'smtpdm.aliyun.com'
+EMAIL_PORT = 80
+EMAIL_HOST_USER = 'no-replay@nfvpn.com'
+EMAIL_HOST_PASSWORD = 'WUqiaini123'
+DEFAULT_FROM_EMAIL = 'no-replay@nfvpn.com'
 
 # SS面板设置：
 MB = 1024 * 1024
 GB = 1024 * 1024 * 1024
-DEFAULT_TRAFFIC = 5 * GB
-START_PORT  = 1024
+DEFAULT_TRAFFIC = 0 * GB
 
 # 默认加密混淆协议
-DEFAULT_METHOD = 'aes-256-cfb'
-DEFAULT_PROTOCOL = 'origin'
+DEFAULT_METHOD = 'none'
+DEFAULT_PROTOCOL = 'auth_chain_a'
 DEFAULT_OBFS = 'plain'
 
 # 签到流量设置
-MIN_CHECKIN_TRAFFIC = 10 * MB
-MAX_CHECKIN_TRAFFIC = 200 * MB
-
+MIN_CHECKIN_TRAFFIC = 0 * MB
+MAX_CHECKIN_TRAFFIC = 0 * MB
+START_PORT  = 5000
 # 是否启用支付宝系统
 USE_ALIPAY = True
 # 支付订单提示信息 修改请保留 {} 用于动态生成金额
-ALIPAY_TRADE_INFO = '谜之屋的{}元充值码'
+ALIPAY_TRADE_INFO = 'Yokiy的{}元充值码'
 
 # 网站title
-TITLE = '谜之屋'
-SUBTITLE = '秘密的小屋'
+TITLE = 'Yokiy'
+SUBTITLE = 'Yokiy的小屋'
 
 # 用户邀请返利比例
-INVITE_PERCENT = 0.2
+INVITE_PERCENT = 0
 # 用户能生成的邀请码数量
-INVITE_NUM = 5
+INVITE_NUM = 0
 
 # 网站邀请界面提示语
-INVITEINFO = '邀请码实时更新，如果用完了进telegram群 群链接：https://t.me/Ehcobreakwa11'
+INVITEINFO = '没有啦！'
 
 # 网站域名设置（请正确填写，不然订阅功能会失效：
-HOST = 'https://www.ehcozone.ml/'
+HOST = 'http://www.17kantv.com/'

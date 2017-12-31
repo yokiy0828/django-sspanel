@@ -4,7 +4,7 @@ import sys
 from alipay import AliPay
 
 # APPID 
-APPID = '2016103002422776'
+APPID = '2017022805950371'
 
 
 path = os.path.split(os.path.realpath(__file__))[0]

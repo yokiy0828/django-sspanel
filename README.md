@@ -7,10 +7,6 @@ Demo: [迷之屋](https://www.ehcozone.ml/)
 
 Wiki: [Wiki](https://github.com/Ehco1996/django-sspanel/wiki)
 
-**欢迎老板捐赠**
-
-![](http://opj9lh0x4.bkt.clouddn.com/17-12-20/62343859.jpg)
-
 ## 项目说明
 
 Django_sspenl 是用django作为后端框架，开发的一个Shadowsocks网络分享面板，其具有以下特点：
@@ -70,7 +66,7 @@ Django_sspenl 是用django作为后端框架，开发的一个Shadowsocks网络�
 
 #### 后端框架：
 
-* Django  <https://www.djangoproject.com/>
+* Django 1.11 <https://www.djangoproject.com/>
 
 #### 第三方组件：
 
@@ -81,3 +77,5 @@ Django_sspenl 是用django作为后端框架，开发的一个Shadowsocks网络�
 ## 部署步骤：
 
 点这里: [部署教程](https://github.com/Ehco1996/django-sspanel/wiki/%E9%9D%A2%E6%9D%BF%E9%83%A8%E7%BD%B2)
+=======
+#django-sspanel

@@ -202,17 +202,12 @@ def userinfo(request):
     min_traffic = '{}m'.format(int(settings.MIN_CHECKIN_TRAFFIC / 1024 / 1024))
     max_traffic = '{}m'.format(int(settings.MAX_CHECKIN_TRAFFIC / 1024 / 1024))
     remain_traffic = 100 - eval(user.ss_user.get_used_percentage())
-    # 订阅地址
-    token = base64.b64encode(
-        bytes(user.username, 'utf-8')).decode('ascii') + '&&' + base64.b64encode(bytes(user.password, 'utf-8')).decode('ascii')
-    sub_link = settings.HOST + 'server/subscribe/' + token
     context = {
         'user': user,
         'anno': anno,
         'remain_traffic': remain_traffic,
         'min_traffic': min_traffic,
         'max_traffic': max_traffic,
-        'sub_link': sub_link,
     }
     return render(request, 'sspanel/userinfo.html', context=context)
 
@@ -406,6 +401,57 @@ def shop(request):
 
 
 @login_required
+def purchase(request, goods_id):
+    '''商品购买逻辑'''
+
+    goods = Shop.objects.all()
+    good = goods.get(pk=goods_id)
+    user = request.user
+    ss_user = request.user.ss_user
+
+    if user.balance < good.money:
+        registerinfo = {
+            'title': '金额不足！',
+            'subtitle': '请联系站长充值',
+            'status': 'error', }
+        context = {'ss_user': ss_user,
+                   'goods': goods,
+                   'registerinfo': registerinfo,
+                   }
+        return render(request, 'sspanel/shop.html', context=context)
+
+    else:
+        # 验证成功进行提权操作
+        ss_user.enable = True
+        ss_user.transfer_enable += good.transfer
+        user.balance -= good.money
+        user.level = good.level
+        user.level_expire_time = timezone.now() + datetime.timedelta(days=good.days)
+        ss_user.save()
+        user.save()
+        # 增加购买记录
+        record = PurchaseHistory(info=good, user=user, money=good.money,
+                                 purchtime=timezone.now())
+        record.save()
+        # 增加返利记录
+        inviter = User.objects.get(pk=user.invited_by)
+        rebaterecord = RebateRecord(
+            user_id=inviter.pk, money=good.money * Decimal(settings.INVITE_PERCENT))
+        inviter.balance += rebaterecord.money
+        inviter.save()
+        rebaterecord.save()
+        registerinfo = {
+            'title': '够买成功',
+            'subtitle': '即将跳转回用户中心',
+            'status': 'success', }
+        context = {
+            'ss_user': ss_user,
+            'registerinfo': registerinfo,
+        }
+        return render(request, 'sspanel/userinfo.html', context=context)
+
+
+@login_required
 def purchaselog(request):
     '''用户购买记录页面'''
 
@@ -489,6 +535,7 @@ def charge(request):
 def announcement(request):
     '''网站公告列表'''
     anno = Announcement.objects.all()
+
     return render(request, 'sspanel/announcement.html', {'anno': anno})
 
 
@@ -497,6 +544,7 @@ def ticket(request):
     '''工单系统'''
     ticket = Ticket.objects.filter(user=request.user)
     context = {'ticket': ticket}
+
     return render(request, 'sspanel/ticket.html', context=context)
 
 
@@ -554,6 +602,7 @@ def ticket_edit(request, pk):
             'title': '修改成功',
             'subtitle': '数据更新成功',
             'status': 'success', }
+
         context = {
             'registerinfo': registerinfo,
             'ticket': Ticket.objects.filter(user=request.user)
@@ -570,6 +619,7 @@ def ticket_edit(request, pk):
 @login_required
 def affiliate(request):
     '''推广页面'''
+
     if request.user.pk != 1:
         invidecodes = InviteCode.objects.filter(
             code_id=request.user.pk, type=0)
@@ -603,6 +653,7 @@ def rebate_record(request):
 @permission_required('shadowsocks')
 def backend_index(request):
     '''跳转到后台界面'''
+
     context = {
         'userNum': User.userNum(),
     }
@@ -613,6 +664,7 @@ def backend_index(request):
 @permission_required('shadowsocks')
 def backend_node_info(request):
     '''节点编辑界面'''
+
     nodes = Node.objects.all()
     context = {
         'nodes': nodes,
@@ -626,10 +678,12 @@ def node_delete(request, node_id):
     node = Node.objects.filter(node_id=node_id)
     node.delete()
     nodes = Node.objects.all()
+
     registerinfo = {
         'title': '删除节点',
         'subtitle': '成功啦',
                     'status': 'success', }
+
     context = {
         'nodes': nodes,
         'registerinfo': registerinfo
@@ -651,6 +705,7 @@ def node_edit(request, node_id):
                 'title': '修改成功',
                 'subtitle': '数据更新成功',
                 'status': 'success', }
+
             context = {
                 'nodes': nodes,
                 'registerinfo': registerinfo,
@@ -690,6 +745,7 @@ def node_create(request):
                 'title': '添加成功',
                 'subtitle': '数据更新成功！',
                 'status': 'success', }
+
             context = {
                 'nodes': nodes,
                 'registerinfo': registerinfo,
@@ -799,6 +855,18 @@ class Page_List_View(object):
         }
 
         return context
+
+
+@permission_required('shadowsocks')
+def backend_Aliveuser(request):
+    '''返回在线用户的ip的View'''
+
+    obj = Aliveip
+    page_num = 10
+    context = Page_List_View(request, obj, page_num).get_page_context()
+
+    return render(request, 'backend/aliveuser.html', context=context)
+
 
 @permission_required('shadowsocks')
 def backend_UserList(request):
@@ -1054,6 +1122,7 @@ def purchase_history(request):
 @permission_required('shadowsocks')
 def backend_anno(request):
     '''公告管理界面'''
+
     anno = Announcement.objects.all()
     context = {
         'anno': anno,
@@ -1067,10 +1136,12 @@ def anno_delete(request, pk):
     anno = Announcement.objects.filter(pk=pk)
     anno.delete()
     anno = Announcement.objects.all()
+
     registerinfo = {
         'title': '删除公告',
         'subtitle': '成功啦',
                     'status': 'success', }
+
     context = {
         'anno': anno,
         'registerinfo': registerinfo
@@ -1090,6 +1161,7 @@ def anno_create(request):
                 'title': '添加成功',
                 'subtitle': '数据更新成功！',
                 'status': 'success', }
+
             context = {
                 'anno': anno,
                 'registerinfo': registerinfo,
@@ -1100,11 +1172,13 @@ def anno_create(request):
                 'title': '错误',
                 'subtitle': '数据填写错误',
                 'status': 'error', }
+
             context = {
                 'form': form,
                 'registerinfo': registerinfo,
             }
             return render(request, 'backend/annocreate.html', context=context)
+
     else:
         form = AnnoForm()
         return render(request, 'backend/annocreate.html', context={'form': form, })
@@ -1113,7 +1187,9 @@ def anno_create(request):
 @permission_required('shadowsocks')
 def anno_edit(request, pk):
     '''公告编辑'''
+
     anno = Announcement.objects.get(pk=pk)
+
     # 当为post请求时，修改数据
     if request.method == "POST":
         form = AnnoForm(request.POST, instance=anno)
@@ -1123,6 +1199,7 @@ def anno_edit(request, pk):
                 'title': '修改成功',
                 'subtitle': '数据更新成功',
                 'status': 'success', }
+
             context = {
                 'registerinfo': registerinfo,
                 'anno': Announcement.objects.all(),
@@ -1133,6 +1210,7 @@ def anno_edit(request, pk):
                 'title': '错误',
                 'subtitle': '数据填写错误',
                 'status': 'error', }
+
             context = {
                 'form': form,
                 'registerinfo': registerinfo,
@@ -1142,6 +1220,7 @@ def anno_edit(request, pk):
     # 当请求不是post时，渲染form
     else:
         anno.body = tomd.convert(anno.body)
+
         context = {
             'anno': anno,
         }
@@ -1185,3 +1264,7 @@ def backend_ticketedit(request, pk):
             'ticket': ticket,
         }
         return render(request, 'backend/ticketedit.html', context=context)
+
+def client_help(request):
+    '''跳转到首页'''
+    return render(request, 'sspanel/client_help.html')

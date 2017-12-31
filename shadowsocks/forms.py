@@ -9,7 +9,7 @@ from .models import Announcement, Node, Shop, User
 class RegisterForm(UserCreationForm):
     '''注册时渲染的表单'''
 
-    username = forms.CharField(label='用户名', help_text='必填。150个字符或者更少。包含字母，数字和仅有的@/./+/-/_符号。',
+    username = forms.CharField(label='用户名', 
                                widget=forms.TextInput(
                                    attrs={'class': 'input is-info'})
                                )
@@ -18,14 +18,11 @@ class RegisterForm(UserCreationForm):
                              widget=forms.TextInput(
                                  attrs={'class': 'input is-warning'})
                              )
-    invitecode = forms.CharField(label='邀请码', help_text='邀请码必须填写',
+    invitecode = forms.CharField(label='邀请码', help_text='请点击下方按钮索要邀请码',
                                  widget=forms.TextInput(
                                      attrs={'class': 'input is-success'})
                                  )
-    password1 = forms.CharField(label='密码', help_text='''你的密码不能与其他个人信息太相似。
-                                                        你的密码必须包含至少 8 个字符。
-                                                        你的密码不能是大家都爱用的常见密码
-                                                        你的密码不能全部为数字。''',
+    password1 = forms.CharField(label='密码', 
                                 widget=forms.TextInput(
                                     attrs={'class': 'input is-primary', 'type': 'password'})
                                 )
